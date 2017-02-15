@@ -25,7 +25,7 @@ public class Tester extends PApplet {
 	public void setup() {
 		size(w, h);
 		images = new ArrayList<PImage>();
-		getPImagesFromPdf("../assets/omrtest.pdf", images);
+		getPImagesFromPdf("omrtest.pdf", images);
 	}
 
 	public void draw() {
@@ -50,6 +50,7 @@ public class Tester extends PApplet {
 			pdf = PDDocument.load(path);
 		} catch (IOException e) {
 			System.out.println("Couldn't load pdf");
+			System.out.println("DID YOU ADD THE ASSETS FOLDER TO YOUR CLASS PATH IN ECLIPSE?");
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
