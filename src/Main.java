@@ -5,9 +5,14 @@ import processing.core.PImage;
 public class Main {
 	public static final String PDF_PATH = "/omrtest.pdf";
 	public static OpticalMarkReader markReader = new OpticalMarkReader();
-	
+
 	public static void main(String[] args) {
 		System.out.println("Welcome!  I will now auto-score your pdf!");
+		
+	/*	VisualPoints tester = new VisualPoints();
+		tester.setup(); */
+	//	tester.clear();
+		
 		System.out.println("Loading file..." + PDF_PATH);
 		ArrayList<PImage> images = PDFHelper.getPImagesFromPdf(PDF_PATH);
 
@@ -15,16 +20,18 @@ public class Main {
 		scoreAllPages(images);
 
 		System.out.println("Complete!");
-		
-		// Optional:  add a saveResults() method to save answers to a csv file
+
+		// Optional: add a saveResults() method to save answers to a csv file
 	}
 
 	/***
 	 * Score all pages in list, using index 0 as the key.
 	 * 
-	 * NOTE:  YOU MAY CHANGE THE RETURN TYPE SO YOU RETURN SOMETHING IF YOU'D LIKE
+	 * NOTE: YOU MAY CHANGE THE RETURN TYPE SO YOU RETURN SOMETHING IF YOU'D
+	 * LIKE
 	 * 
-	 * @param images List of images corresponding to each page of original pdf
+	 * @param images
+	 *            List of images corresponding to each page of original pdf
 	 */
 	private static void scoreAllPages(ArrayList<PImage> images) {
 		ArrayList<AnswerSheet> scoredSheets = new ArrayList<AnswerSheet>();
@@ -32,12 +39,21 @@ public class Main {
 		// Score the first page as the key
 		AnswerSheet key = markReader.processPageImage(images.get(0));
 
+		System.out.println(key.getPageAnswers().toString());
 		for (int i = 1; i < images.size(); i++) {
 			PImage image = images.get(i);
 
 			AnswerSheet answers = markReader.processPageImage(image);
-
-			// do something with answers
+			
+			
+			answers.setScore(key.getPageAnswers());
+		
+			System.out.println(answers.getScore());
 		}
+	}
+
+	public static PImage getAnswerKey() {
+		ArrayList<PImage> images = PDFHelper.getPImagesFromPdf(PDF_PATH);
+		return images.get(0);
 	}
 }
