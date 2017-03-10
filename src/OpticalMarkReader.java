@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 import processing.core.PImage;
 
 /***
@@ -8,7 +6,7 @@ import processing.core.PImage;
  */
 public class OpticalMarkReader {
 	public static OpticalMarkReader markReader = new OpticalMarkReader();
-	private AnswerSheet answers = new AnswerSheet(100);
+	private AnswerSheet answers = new AnswerSheet();
 
 	private int upperLeftPixelX = 107;
 	private int upperLeftPixelY = 464;
@@ -17,6 +15,8 @@ public class OpticalMarkReader {
 	private int leftSideOfBubble = 126;
 	private int leftSideOfBubbleTop = 457;
 	private int leftSideOfBubbleBottom = 498;
+	
+	private int gapBetweenRectangles = 90;
 
 	private int middleTwoPixels1 = 4;
 	private int middleTwoPixels2 = 7;
@@ -31,9 +31,7 @@ public class OpticalMarkReader {
 	public AnswerSheet processPageImage(PImage image) {
 		image.filter(image.GRAY);
 
-		PImage answerKey = Main.getAnswerKey();
 		int rectangleWidth = rightPixelX - upperLeftPixelX;
-		int gapBetweenBubbles = rightSideOfBubble - leftSideOfBubble;
 		int rowHeight = leftSideOfBubbleBottom - leftSideOfBubbleTop;
 		int rectangleHeight = rowHeight * 25;
 		
@@ -44,9 +42,10 @@ public class OpticalMarkReader {
 		int maxBubble = 0;
 		int answer = 0;
 		
-		for (int j = upperLeftPixelY; j < upperLeftPixelY + rectangleHeight - rowHeight; j = j + rowHeight) {
+		for (int a = upperLeftPixelX; a < 1170 - upperLeftPixelX; a+= gapBetweenRectangles) {
+		for (int j = upperLeftPixelY; j < upperLeftPixelY + rectangleHeight - rowHeight; j += rowHeight) {
 			int count = 1;
-			for (int i = upperLeftPixelX; i < upperLeftPixelX + rectangleWidth - rectangleWidth/5; i = i + rectangleWidth/5) {
+			for (int i = a; i < a + rectangleWidth - rectangleWidth/5; i += rectangleWidth/5) {
 				int value = getSumValue(j, i, boxWidth, rowHeight, image);
 				if (value < max) {
 					max = value;
@@ -60,14 +59,15 @@ public class OpticalMarkReader {
 			
 			if (answer == 1)
 				answers.addPage("A");
-			if (answer == 2)
+			else if (answer == 2)
 				answers.addPage("B");
-			if (answer == 3)
+			else if (answer == 3)
 				answers.addPage("C");
-			if (answer == 4)
+			else if (answer == 4)
 				answers.addPage("D");
-			if (answer == 5)
+			else if (answer == 5)
 				answers.addPage("E");
+		}
 		}
 		return answers;
 	}

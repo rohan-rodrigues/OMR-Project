@@ -47,7 +47,9 @@ public class Main {
 
 			AnswerSheet answers = markReader.processPageImage(image);
 			
-			answers.setScoreWithList(key.getPageAnswers());
+			System.out.println(answers.getPageAnswers().toString());
+			
+			answers.checkScoreWithKey(key.getPageAnswers());
 			
 			scoredSheets.add(answers);
 		
@@ -58,9 +60,35 @@ public class Main {
 		ms.setAnswerSheetList(scoredSheets);
 		ms.addAnswerKey(key);
 				
-		CSVData data = new CSVData("/Users/rohanrodrigues/Documents/file1.csv", "/Users/rohanrodrigues/Documents/file2.csv", ms);
-		data.writeToCSVPercent();
-		data.writeToCSVAnalysis();
+		CSVData data1 = new CSVData(createRowNamesForPercent(ms.getAnswerSheetList()), createColumnNamesForPercent(ms.getAnswerSheetList()), ms.getScores2DArr());
+		data1.saveToFile("/Users/rohanrodrigues/Documents/file1.csv");
+		
+		CSVData data2 = new CSVData(createRowNamesForAnalysis(ms.getAnswerSheetList()), createColumnNamesForAnalysis(ms.getAnswerSheetList()), ms.getItemsAnalysis());
+		data2.saveToFile("/Users/rohanrodrigues/Documents/file2.csv");
+	}
+
+	private static String[] createRowNamesForPercent(ArrayList<AnswerSheet> answerSheetList) {
+		String[] names = new String[answerSheetList.size()];
+		for (int i = 0; i < names.length; i++) {
+			names[i] = "Page: " + i;
+		}
+		return names;
+	}
+
+	private static String[] createColumnNamesForPercent(ArrayList<AnswerSheet> answerSheetList) {
+		return new String[] {"Page #", "Score"};
+	}
+	
+	private static String[] createRowNamesForAnalysis(ArrayList<AnswerSheet> answerSheetList) {
+		String[] names = new String[answerSheetList.get(0).getPageAnswers().size()];
+		for (int i = 0; i < names.length; i++) {
+			names[i] = "Problem: " + i;
+		}
+		return names;
+	}
+
+	private static String[] createColumnNamesForAnalysis(ArrayList<AnswerSheet> answerSheetList) {
+		return new String[] {"Problem #", "Number of Students Who Got It Wrong", "% of Students Got It Wrong"};
 	}
 
 	public static PImage getAnswerKey() {

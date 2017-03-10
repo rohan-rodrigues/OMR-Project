@@ -5,13 +5,11 @@ import java.util.ArrayList;
  */
 public class AnswerSheet {
 	private ArrayList<String> pageAnswers;
-	private int score;
-	private int numProblems;
+	private int score = 0;
+	private int numProblems = 25;
 	
-	public AnswerSheet(int numProblems) {
-		this.pageAnswers = new ArrayList<>();
-		score = 0;
-		this.numProblems = numProblems;
+	public AnswerSheet() {
+		pageAnswers = new ArrayList<>();
 	}
 
 	public int getScore() {
@@ -42,9 +40,9 @@ public class AnswerSheet {
 		}
 	}
 	
-	public void setScoreWithList(ArrayList<String> answers){
-		for(int i = 0; i < answers.size(); i++){
-			if(answers.get(i).equals(pageAnswers.get(i))){
+	public void checkScoreWithKey(ArrayList<String> answers){
+		for (int i = 0; i < answers.size(); i++) {
+			if (answers.get(i).equals(pageAnswers.get(i))){
 				score++;
 			}
 		}
@@ -58,8 +56,9 @@ public class AnswerSheet {
 		return score / numProblems;
 	}
 	
+	
 	public boolean wasCorrectForProblem(int number, String correctAnswer) {
-		return (pageAnswers.get(number-1).equals(correctAnswer));
+		return (pageAnswers.get(number).equals(correctAnswer));
 	}
 
 }
